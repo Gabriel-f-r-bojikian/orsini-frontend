@@ -1,5 +1,5 @@
 import Head from "next/head"
-import Orsini from "./orsini"
+import Orsini from "../components/Orsini/orsini"
 
 export default function Home() {
   return (
