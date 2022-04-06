@@ -38,10 +38,10 @@ $ git clone <https://github.com/Gabriel-f-r-bojikian/orsini-frontend.git>
 $ cd orsini
 
 # Install all dependencies
-$ yarn
+$ npm install
 
 # Run the application
-$ yarn run dev
+$ npm run dev
 ```
 # Author and Acknowledgements
 Autorship attribuition: Gabriel Bojikian
