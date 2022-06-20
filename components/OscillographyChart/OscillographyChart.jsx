@@ -1,4 +1,6 @@
+import React, { useContext, useEffect } from 'react';
 import { Legend, LineChart, Line, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
+import { DataContext } from '../../pages/_app';
 
 import styles from "./oscillographychart.module.scss";
 
@@ -11,6 +13,13 @@ const data = [
 ];
 
 export default function OscillographyChart(props) {
+    const dataQueue = useContext( DataContext );
+
+    useEffect(() => {
+        console.log(dataQueue);
+    }, [dataQueue]);
+
+    console.log(dataQueue);
     const renderLineChart = (
         <LineChart width={600} height={300} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
             <Line type="monotone" dataKey="uv" stroke="#FAAB4E" />
