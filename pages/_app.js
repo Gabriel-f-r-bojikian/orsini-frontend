@@ -16,10 +16,7 @@ function MyApp({Component, pageProps}) {
   const dataQueue = [];
 
   useEffect(() => {
-        console.log("Got here")
         socket.on('incoming message', (message) => {
-          console.log(message);
-           
           if( dataQueue.length > maxDataQueueSize ) {
             dataQueue.shift();
           }
