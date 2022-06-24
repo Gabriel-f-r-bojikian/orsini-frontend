@@ -1,33 +1,34 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Legend, LineChart, Line, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
 import { DataContext } from '../../pages/_app';
+const io = require("socket.io-client");
+const socket = io("http://localhost:2999", {
+  transports: ['websocket']
+});
+
 
 import styles from "./oscillographychart.module.scss";
 
-const data = [
-    {name: 'Page A', uv: 400, pv: 2400, amt: 2400},
-    {name: 'Page B', uv: 300, pv: 2400, amt: 2400},
-    {name: 'Page C', uv: 200, pv: 2400, amt: 2400},
-    {name: 'Page D', uv: 300, pv: 2400, amt: 2400},
-    {name: 'Page E', uv: 150, pv: 2400, amt: 2400},
-];
-
 export default function OscillographyChart(props) {
-    const dataQueue = useContext( DataContext );
-    let dataPoints = {}
-    const [cachedDataQueue, setCachedDataQueue] = useState([]);
+    const maxDataQueueSize = 100;
+
+    const [dataQueue, setDataQueue] = useState([]);
     const [voltageDataPoints, setVoltageDataPoints] = useState([]);
     const [amperageDataPoints, setAmperageDataPoints] = useState([]);
+
     useEffect(() => {
-        setCachedDataQueue(dataQueue);
-        const dataPoints = convertDataToChartPoints(dataQueue);
-        setVoltageDataPoints(dataPoints.voltage);
-        setAmperageDataPoints(dataPoints.amperage);
-        console.log("Arrived on this hook");
-        console.log(dataQueue);
-        console.log(dataPoints);
-        console.log("End of relevant console logs");
-    }, [dataQueue]);
+        socket.on('incoming message', (message) => {
+            if( dataQueue.length > maxDataQueueSize ) {
+                dataQueue.shift();
+            }
+            // console.log(dataQueue);
+            dataQueue.push(message);
+            setDataQueue(dataQueue);
+            const dataPoints = convertDataToChartPoints(dataQueue);
+            setVoltageDataPoints(dataPoints.voltage);
+            setAmperageDataPoints(dataPoints.amperage);
+        })
+    }, [socket])
 
     const renderLineChart = (
         <div>
